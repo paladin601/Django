@@ -1,0 +1,92 @@
+{% extends 'base/base.html' %}
+{% block css %}
+{% load fontawesome %}
+{% fontawesome_stylesheet %}
+
+{% endblock %}
+
+
+{% block title %}Detalles de los Formularios{% endblock %}
+
+{% block content %}
+<h3 class="text-center">Detalles del Formulario</h3>
+
+{% if success %}
+<div class="alert alert-success alert-dismissible">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+    <strong>{{success}}</strong>
+</div>
+{% endif %}
+
+{% if form %}
+<div class="table-responsive">
+
+    <table class="table table-striped table-dark  ">
+        <thead>
+            <tr>
+                <th scope="col" class="text-center">Nombre</th>
+                <th scope="col" class="text-center">Apellido</th>
+                <th scope="col" class="text-center">Cedula</th>
+                <th scope="col" class="text-center">Sexo</th>
+                <th scope="col" class="text-center">Edad</th>
+                <th scope="col" class="text-center">Casado</th>
+                <th scope="col" class="text-center">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for f in form %}
+            <tr class={{f.Cedula}}>
+                <td class="text-center">{{ f.Nombre }}</td>
+                <td class="text-center">{{ f.Apellido }}</td>
+                <td class="text-center">{{ f.Cedula }}</td>
+                <td class="text-center">{% if f.Sexo == 'M' %}Masculino{% else %}Femenino{% endif %}</td>
+                <td class="text-center">{{ f.Edad }}</td>
+                <td class="text-center">{% if f.Casado == True %}Casado{% else %}Soltero{% endif %}</td>
+                <td class="actions">
+                    <button class="btn-actions" id={{f.Cedula}} onclick="edit(this)">
+                        {% fontawesome_icon 'pencil' color='white' %}
+                    </button>
+                    <button class="btn-actions" id={{f.Cedula}} onclick="del(this)" data-toggle="modal"
+                        data-target="#modal_delete">
+                        {% fontawesome_icon 'close' color='red' %}
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+
+        </tbody>
+    </table>
+</div>
+{% include 'base/modal_remove.html'%}
+{% else %}
+
+
+<div class="alert alert-danger alert-dismissible">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+    <strong>No se ha llenado el Formulario por primera vez</strong>
+</div>
+<a class="btn btn-success btn-lg btn-block" href="{% url 'formulario:index'  %}">Ir al Formulario</a>
+{% endif %}
+<script>
+    function delRegister(event) {
+        $.ajax({
+            type: "POST",
+            url: "{% url 'formulario:delete' %}",
+            data: { 'cedula': event.id, 'csrfmiddlewaretoken': '{{ csrf_token }}' },
+            success: function (response) {
+                value = $("." + response)[0];
+                value.remove();
+                $('#modal_delete').modal('hide');
+                $('body').removeClass('modal-open');
+                $('.modal-backdrop').remove();
+            }
+        })
+    }
+</script>
+
+{% endblock %}
+
+{% block js %}
+{% load staticfiles %}
+<script src="{% static 'js/detail.js' %}"></script>
+{% endblock %}

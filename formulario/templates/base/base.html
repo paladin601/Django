@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    {% block css %}
+    {% endblock %}    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% block title %}{% endblock %}</title>
+    {% load bootstrap4 %}
+    {% bootstrap_css %}
+</head>
+<body>
+    {% block navbar %}
+        {% include 'base/navbar.html' %}
+    {% endblock %}
+    <div class="container-form">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    {% block js %}
+    {% endblock %}
+    {% bootstrap_javascript jquery='full' %}
+</body>
+</html>

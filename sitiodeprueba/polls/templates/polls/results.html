@@ -1,0 +1,28 @@
+{% extends 'polls/navbar.html' %}
+
+{% block content %}
+
+    <h1>{{ question.question_text }}</h1>
+    <table class="table table-striped table-dark">
+            <thead>
+              <tr>
+                <th scope="col">Opcion</th>
+                <th scope="col">Votos</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for choice in question.choice_set.all %}
+                <tr>
+                    <td>{{ choice.choice_text }}</td>
+                    <td>{{ choice.votes }} voto{{ choice.votes|pluralize }}</td>
+                </tr>
+                {% endfor %}
+             
+            </tbody>
+          </table>
+    <ul>
+    </ul>
+
+    <a class="btn btn-primary" href="{% url 'polls:detail' question.id %}">Votar de Nuevo?</a>
+
+{% endblock %}
